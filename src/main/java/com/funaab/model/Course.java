@@ -52,4 +52,9 @@ public class Course {
     @Column(name = "updated_date")
     private Date updatedDate;
 
+    @ManyToOne
+    @JoinColumn(name = "lecturer_id")
+    private Lecturer lecturer; // Lecturer teaching the course
+
+
 }
