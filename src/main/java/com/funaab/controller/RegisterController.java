@@ -22,6 +22,11 @@ public class RegisterController {
         return studentService.registerStudent(request);
     }
 
+    @GetMapping("/test")
+    public String test(){
+        return "Testing app";
+    }
+
     @PostMapping("/lecturer")
     public ResponseEntity<String> registerLecturer(@RequestBody LecturerRequest request){
         return lecturerService.registerLecturer(request);
