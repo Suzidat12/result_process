@@ -30,7 +30,7 @@ public class SecurityConfiguration {
         httpSecurity
                 .csrf().disable() // Disables CSRF protection
                 .authorizeRequests(authorize -> authorize
-                        .antMatchers("/register/**").permitAll() // Permit all requests to /register/**
+                        .antMatchers("/register/**").permitAll()
                         .antMatchers("/student/**").hasAuthority("STUDENT") // Require 'USER' authority for /student/**
                         .antMatchers("/lecturer/**").hasAuthority("LECTURER") // Require 'USER' authority for /student/**
                         .antMatchers("/admin/**").hasAuthority("ADMIN") // Require 'USER' authority for /student/**

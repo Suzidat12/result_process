@@ -45,7 +45,7 @@ public class CourseRegistration {
     private String registrationStatus;
 
     @Column(name = "exam_score")
-    private BigDecimal ExamScore;
+    private BigDecimal examScore;
     @Column(name = "grade")
     private String grade;
     @Column(name = "semester")
@@ -58,5 +58,30 @@ public class CourseRegistration {
     private Date createdDate;
     @Column(name = "updated_date")
     private Date updatedDate;
+    public void setGradeBasedOnScores() {
+        if (testScore != null && examScore != null) {
+            BigDecimal totalScore = testScore.add(examScore);
+            BigDecimal thresholdA = BigDecimal.valueOf(70); // Minimum score for grade A
+            BigDecimal thresholdB = BigDecimal.valueOf(60); // Minimum score for grade B
+            BigDecimal thresholdC = BigDecimal.valueOf(50); // Minimum score for grade C
+            BigDecimal thresholdD = BigDecimal.valueOf(40); // Minimum score for grade D
+            BigDecimal thresholdE = BigDecimal.valueOf(30); // Minimum score for grade D
 
+            if (totalScore.compareTo(BigDecimal.valueOf(100)) >= 0) {
+                this.grade = "A"; // Example threshold for 'A'
+            } else if (totalScore.compareTo(thresholdA) >= 0) {
+                this.grade = "B"; // Example threshold for 'B'
+            } else if (totalScore.compareTo(thresholdB) >= 0) {
+                this.grade = "C";
+            }  else if (totalScore.compareTo(thresholdC) >= 0) {
+            this.grade = "C";
+        } else if (totalScore.compareTo(thresholdD) >= 0) {
+            this.grade = "D";
+        }else if (totalScore.compareTo(thresholdE) >= 0) {
+            this.grade = "E";
+        } else {
+                this.grade = "F"; // Default or other grade
+            }
+        }
+    }
 }

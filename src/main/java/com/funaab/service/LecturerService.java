@@ -1,9 +1,7 @@
 package com.funaab.service;
 
-import com.funaab.dto.JwtAuthenticationResponse;
-import com.funaab.dto.LecturerRequest;
-import com.funaab.dto.LoginRequest;
-import com.funaab.dto.StudentRequest;
+import com.funaab.dto.*;
+import com.funaab.model.Course;
 import com.funaab.model.CourseRegistration;
 import com.funaab.model.Lecturer;
 import com.funaab.model.Student;
@@ -17,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -28,6 +27,8 @@ import java.util.Optional;
 public class LecturerService {
    private final LecturerRepository lecturerRepository;
    private final CourseRegRepository courseRegRepository;
+   private final StudentRepository studentRepository;
+   private final CourseRepository courseRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JWTService jwtService;
@@ -75,7 +76,34 @@ public class LecturerService {
         return courseRegRepository.countByCourseId(courseId);
     }
 
-    public List<Student> getStudentsForCourse(Long courseId) {
-        return courseRegRepository.findStudentsByCourseId(courseId);
+    public ResponseEntity<List<Student>> getStudentsForCourse(Long courseId) {
+        return ResponseEntity.ok(courseRegRepository.findStudentsByCourseId(courseId));
     }
+    public ResponseEntity<List<Course>> getCoursesForLecturer(Long lecturerId) {
+        return ResponseEntity.ok(courseRepository.findByLecturerId(lecturerId));
+    }
+
+    @Transactional
+    public ResponseEntity<String> updateCourse(CourseUpdateRequest request) {
+        Optional<Student> studentOptional = studentRepository.findByMatricNo(request.getMatricNo());
+        if (studentOptional.isEmpty()) {
+            return ResponseEntity.badRequest().body("Student not found");
+        }
+        Student student = studentOptional.get();
+        Optional<CourseRegistration> courseRegistrationOptional = courseRegRepository.findByStudent(student);
+        if(courseRegistrationOptional.isEmpty()){
+            return ResponseEntity.badRequest().body("Course not found");
+        }
+        CourseRegistration courseRegistration = courseRegistrationOptional.get();
+        courseRegistration.setExamScore(request.getExamScore());
+        courseRegistration.setTestScore(request.getTestScore());
+        courseRegistration.setGradeBasedOnScores();
+        courseRegistration.setYear(request.getYear());
+        courseRegistration.setSemester(request.getSemester());
+            courseRegRepository.save(courseRegistration);
+        return ResponseEntity.ok("Course scores updated successfully");
+    }
+
+
+
 }
