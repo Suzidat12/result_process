@@ -12,8 +12,7 @@ import java.util.Set;
 @Builder
 public class CourseUpdateRequest {
     private String matricNo;
+    private Long courseId;
     private BigDecimal examScore;
     private BigDecimal testScore;
-    private String semester;
-    private String year;
 }

@@ -14,7 +14,9 @@ import java.util.Optional;
 @Repository
 public interface CourseRegRepository extends JpaRepository<CourseRegistration, Long> {
     long countByCourseId(Long courseId);
-    Optional<CourseRegistration> findByStudent(Student student);
+    boolean existsByStudentAndCourse(Student student, Course course);
+    Optional<CourseRegistration> findByStudentAndCourse(Student student,Course course);
+    Optional<CourseRegistration> findByCourse_Id(Long id);
     @Query("SELECT c.student FROM CourseRegistration c WHERE c.course.id = :courseId")
     List<Student> findStudentsByCourseId(@Param("courseId") Long courseId);
 }

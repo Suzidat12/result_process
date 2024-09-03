@@ -20,7 +20,7 @@ import java.util.Set;
 
 @Entity
 //@Indexed
-@Table(name = "lecturer")
+@Table(name = "admin")
 @Setter
 @Getter
 @AllArgsConstructor
@@ -28,12 +28,12 @@ import java.util.Set;
 @SuperBuilder
 @JsonIgnoreProperties(ignoreUnknown = true)
 @SequenceGenerator(
-        name = "lecturer_sequence_gen",
-        sequenceName = "lecturer_seq",
+        name = "admin_sequence_gen",
+        sequenceName = "admin_seq",
         allocationSize = 1)
 public class Admin implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "lecturer_sequence_gen")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "admin_sequence_gen")
     private Long id;
 
     @Column(name = "staff_id")
@@ -77,7 +77,7 @@ private Set<Course> courses; // Courses assigned to the lecturer
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("STUDENT"));
+        return List.of(new SimpleGrantedAuthority("ADMIN"));
     }
 
     @Override

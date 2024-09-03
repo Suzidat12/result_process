@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum CourseStatus {
-    COMPULSORY("COMPULSORY"),
-    ELECTIVE("ELECTIVE");
+    APPROVED("APPROVED"),
+    REJECTED("REJECTED");
 
 
     private final String courseStatus;

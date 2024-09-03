@@ -79,7 +79,7 @@ public class Lecturer implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("STUDENT"));
+        return List.of(new SimpleGrantedAuthority("LECTURER"));
     }
 
     @Override

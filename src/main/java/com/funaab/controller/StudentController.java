@@ -1,6 +1,7 @@
 package com.funaab.controller;
 
 import com.funaab.dto.*;
+import com.funaab.model.Course;
 import com.funaab.model.Student;
 import com.funaab.service.CourseRegService;
 import com.funaab.service.StudentService;
@@ -17,6 +18,7 @@ import java.util.List;
 public class StudentController {
     private final StudentService studentService;
     private final CourseRegService courseRegService;
+
     @GetMapping("/all")
     public ResponseEntity<List<Student>> all(){
         return studentService.getAllStudent();
@@ -31,8 +33,25 @@ public class StudentController {
         return courseRegService.registerCourse(request);
     }
 
+    @PostMapping("/add-rectification")
+    public ResponseEntity<String> addRectification(@RequestBody RectificationRequest request){
+        return studentService.addRectification(request);
+    }
+
+
+
     @GetMapping("/course-reg")
     public ResponseEntity<StudentResponse> getStudentWithCourses(@RequestParam("matricNo")String matricNo){
         return courseRegService.getStudentWithCourses(matricNo);
+    }
+
+    @GetMapping("/view-result")
+    public ResponseEntity<StudentResponse> getViewResult(@RequestParam("matricNo")String matricNo){
+        return courseRegService.viewResult(matricNo);
+    }
+
+    @GetMapping("/all-course")
+    public ResponseEntity<List<Course>> allCourse(@RequestParam("level")String level){
+        return courseRegService.getAllCourses(level);
     }
 }

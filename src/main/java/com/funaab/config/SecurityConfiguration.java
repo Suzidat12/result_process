@@ -11,7 +11,6 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,8 +31,8 @@ public class SecurityConfiguration {
                 .authorizeRequests(authorize -> authorize
                         .antMatchers("/register/**").permitAll()
                         .antMatchers("/student/**").hasAuthority("STUDENT") // Require 'USER' authority for /student/**
-                        .antMatchers("/lecturer/**").hasAuthority("LECTURER") // Require 'USER' authority for /student/**
-                        .antMatchers("/admin/**").hasAuthority("ADMIN") // Require 'USER' authority for /student/**
+                        .antMatchers("/lecturer/**").hasAnyAuthority("LECTURER","ADMIN") // Require 'USER' authority for /student/**
+                        .antMatchers("/admin/**").hasAnyAuthority("ADMIN","LECTURER") // Require 'USER' authority for /student/**
                         .anyRequest().authenticated() // Require authentication for all other requests
                 )
                 .sessionManagement(session -> session
@@ -59,5 +58,4 @@ public class SecurityConfiguration {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception{
         return configuration.getAuthenticationManager();
     }
-    }
-
+}

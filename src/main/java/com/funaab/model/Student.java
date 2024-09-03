@@ -61,6 +61,9 @@ public class Student implements UserDetails {
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<CourseRegistration> registrations = new HashSet<>();
 
+    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
+    private Set<Rectification> rectifications;
+
     @Column(name = "status")
     private String status;
 

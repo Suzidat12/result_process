@@ -1,12 +1,11 @@
 package com.funaab.service;
 
-import com.funaab.dto.CourseRegResponse;
-import com.funaab.dto.CourseRequest;
-import com.funaab.dto.CourseRespose;
-import com.funaab.dto.StudentResponse;
+import com.funaab.dto.*;
 import com.funaab.model.Course;
 import com.funaab.model.CourseRegistration;
+import com.funaab.model.Rectification;
 import com.funaab.model.Student;
+import com.funaab.model.enums.RegistrationStatus;
 import com.funaab.repository.CourseRegRepository;
 import com.funaab.repository.CourseRepository;
 import com.funaab.repository.StudentRepository;
@@ -15,7 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,6 +42,10 @@ public class CourseRegService {
             // Create a new course registration
             CourseRegistration registration = new CourseRegistration();
             registration.setStudent(student);
+            registration.setStatus("PENDING");
+            registration.setSemester(request.getSemester());
+            registration.setYear(request.getYear());
+            registration.setRegistrationStatus(String.valueOf(request.getRegistrationStatus()));
             registration.setCourse(course);
             courseRegRepository.save(registration);
         }
@@ -94,6 +100,51 @@ public class CourseRegService {
         dto.setCourseUnit(course.getCourseUnit());
         dto.setStatus(course.getCourseStatus());
         return dto;
+    }
+
+    public ResponseEntity<List<CourseRespose>> getCourses() {
+        List<Course> courseList = courseRepository.findAll();
+        List<CourseRespose> courseResponses = new ArrayList<>();
+        for (Course course : courseList) {
+            CourseRespose courseResponse = new CourseRespose();
+            courseResponse.setId(course.getId());
+            courseResponse.setCourseUnit(course.getCourseUnit());
+            courseResponse.setCourseCode(course.getCourseCode());
+            courseResponse.setStatus(courseResponse.getStatus());
+            courseResponses.add(courseResponse);
+        }
+        return ResponseEntity.ok(courseResponses);
+    }
+
+    public ResponseEntity<List<Course>> getAllCourses(String level){
+        return ResponseEntity.ok(courseRepository.findAllByCourseLevel(level));
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<StudentResponse> viewResult(String matricNo) {
+        Optional<Student> studentOptional = studentRepository.findByMatricNo(matricNo);
+        if (studentOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Student student = studentOptional.get();
+        StudentResponse studentDTO = new StudentResponse();
+        studentDTO.setId(student.getId());
+        studentDTO.setMatricNo(student.getMatricNo());
+        studentDTO.setCollege(student.getCollege());
+        studentDTO.setDepartment(student.getDepartment());
+        studentDTO.setEmail(student.getEmail());
+        studentDTO.setFullName(student.getFullName());
+        studentDTO.setLevel(student.getLevel());
+        studentDTO.setLevel(student.getLevel());
+        studentDTO.setRole(student.getRole());
+        studentDTO.setGender(student.getGender());
+        Set<CourseRegResponse> approvedRegistrations = student.getRegistrations().stream()
+                .filter(registration -> registration.getStatus().equals("APPROVED"))
+                .map(this::toCourseRegistrationDto)
+                .collect(Collectors.toSet());
+        studentDTO.setRegistrations(approvedRegistrations);
+        return ResponseEntity.ok(studentDTO);
     }
 
 }

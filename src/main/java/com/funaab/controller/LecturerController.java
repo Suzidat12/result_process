@@ -2,10 +2,13 @@ package com.funaab.controller;
 
 import com.funaab.dto.CourseRequest;
 import com.funaab.dto.CourseUpdateRequest;
+import com.funaab.dto.RectificationResponse;
 import com.funaab.dto.StudentResponse;
 import com.funaab.model.Course;
+import com.funaab.model.Rectification;
 import com.funaab.model.Student;
 import com.funaab.service.CourseRegService;
+import com.funaab.service.HodService;
 import com.funaab.service.LecturerService;
 import com.funaab.service.StudentService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +25,7 @@ public class LecturerController {
     private final StudentService studentService;
     private final CourseRegService courseRegService;
     private final LecturerService lecturerService;
+    private final HodService hodService;
     @GetMapping("/registered-student-course")
     public ResponseEntity<List<Student>> getStudentsForCourse(@RequestParam("courseId") Long courseId){
         return lecturerService.getStudentsForCourse(courseId);
@@ -51,4 +55,14 @@ public class LecturerController {
     public ResponseEntity<StudentResponse> getStudentWithCourses(@RequestParam("matricNo")String matricNo){
         return courseRegService.getStudentWithCourses(matricNo);
     }
+    @PostMapping("/course-reg")
+    public ResponseEntity<String> registerCourse(@RequestBody CourseRequest request){
+        return courseRegService.registerCourse(request);
+    }
+
+    @GetMapping("/rectification")
+    public ResponseEntity<List<RectificationResponse>> getAllRectifications(){
+        return hodService.getAllRectifications();
+    }
+
 }

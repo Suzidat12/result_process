@@ -39,6 +39,9 @@ public class Course {
     @Column(name = "course_unit")
     private String courseUnit;
 
+    @Column(name = "course_level")
+    private String courseLevel;
+
     @JsonIgnore
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
     private Set<CourseRegistration> registrations = new HashSet<>();

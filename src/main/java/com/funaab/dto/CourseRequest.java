@@ -11,5 +11,8 @@ import java.util.Set;
 @Builder
 public class CourseRequest {
     private String matricNo;
+    private String semester;
+    private String year;
+    private String registrationStatus;
     private Set<Long> courseIds;
 }

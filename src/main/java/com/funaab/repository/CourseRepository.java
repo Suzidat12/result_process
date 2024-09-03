@@ -11,5 +11,6 @@ import java.util.Optional;
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
     List<Course> findByLecturerId(Long lecturerId);
+    List<Course> findAllByCourseLevel(String level);
 
 }

@@ -50,6 +50,8 @@ public class CourseRegistration {
     private String grade;
     @Column(name = "semester")
     private String semester;
+    @Column(name = "comments")
+    private String comments;
     @Column(name = "year")
     private String year;
     @Column(name = "status")
